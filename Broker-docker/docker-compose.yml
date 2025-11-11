@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  mqtt-broker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mqtt-broker
+    hostname: mqtt-broker
+    ports:
+      - "1883:1883"
+    environment:
+      - BROKER_HOST=0.0.0.0
+      - BROKER_PORT=1883
+      - LOG_LEVEL=INFO
+    volumes:
+      - mqtt-logs:/app/logs
+      - mqtt-data:/app/data
+    networks:
+      - mqtt-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; s=socket.socket(); s.settimeout(1); s.connect(('localhost',1883)); s.close()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  mqtt-subscriber:
+    build:
+      context: .
+      dockerfile: Dockerfile.subscriber
+    container_name: mqtt-subscriber
+    hostname: mqtt-subscriber
+    depends_on:
+      mqtt-broker:
+        condition: service_healthy
+    environment:
+      - SUBSCRIBER_BROKER_HOST=mqtt-broker
+      - SUBSCRIBER_BROKER_PORT=1883
+    volumes:
+      - subscriber-logs:/app/logs
+    networks:
+      - mqtt-network
+    restart: unless-stopped
+
+volumes:
+  mqtt-logs:
+    driver: local
+  mqtt-data:
+    driver: local
+  subscriber-logs:
+    driver: local
+
+networks:
+  mqtt-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
