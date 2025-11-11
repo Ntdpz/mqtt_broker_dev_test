@@ -1,0 +1,105 @@
+[
+    {
+        "id": "502f016a44d10304",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "614fd6d26e94a940",
+        "type": "inject",
+        "z": "502f016a44d10304",
+        "name": "Send Temperature",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"type\":\"publish\",\"topic\":\"sensor/temperature\",\"payload\":\"25.5\",\"qos\":0}",
+        "payloadType": "json",
+        "x": 150,
+        "y": 200,
+        "wires": [
+            [
+                "14d1d65a82231759"
+            ]
+        ]
+    },
+    {
+        "id": "84160899bd9b2cd4",
+        "type": "tcp out",
+        "z": "502f016a44d10304",
+        "name": "MQTT Broker",
+        "host": "localhost",
+        "port": "1883",
+        "beserver": "client",
+        "base64": false,
+        "end": false,
+        "tls": "",
+        "x": 520,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "14d1d65a82231759",
+        "type": "function",
+        "z": "502f016a44d10304",
+        "name": "Format JSON",
+        "func": "msg.payload = JSON.stringify(msg.payload) + '\\n';\\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 200,
+        "wires": [
+            [
+                "b1c2d3e4f5a6789",
+                "84160899bd9b2cd4"
+            ]
+        ]
+    },
+    {
+        "id": "b1c2d3e4f5a6789",
+        "type": "debug",
+        "z": "502f016a44d10304",
+        "name": "Before TCP",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 530,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "a1b2c3d4e5f6789",
+        "type": "debug",
+        "z": "502f016a44d10304",
+        "name": "Debug Output",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 540,
+        "y": 260,
+        "wires": []
+    }
+]

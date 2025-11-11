@@ -1,0 +1,37 @@
+{
+  "broker": {
+    "host": "localhost",
+    "port": 1883,
+    "max_connections": 100,
+    "keepalive_timeout": 60
+  },
+  "logging": {
+    "level": "INFO",
+    "console": true,
+    "file": true,
+    "filename": "broker.log",
+    "max_file_size": "10MB",
+    "backup_count": 5
+  },
+  "topics": {
+    "max_messages_per_topic": 10,
+    "auto_cleanup": true,
+    "cleanup_interval": 3600
+  },
+  "security": {
+    "allow_anonymous": true,
+    "require_authentication": false,
+    "username": "",
+    "password": ""
+  },
+  "performance": {
+    "stats_interval": 30,
+    "heartbeat_interval": 10,
+    "client_timeout": 300
+  },
+  "features": {
+    "retained_messages": false,
+    "qos_support": [0, 1],
+    "wildcard_subscriptions": false
+  }
+}
